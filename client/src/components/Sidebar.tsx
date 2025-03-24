@@ -1,10 +1,14 @@
-import { useLocation, Link } from "wouter";
+import { useLocation } from "wouter";
 
 const Sidebar = () => {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
 
   const isActive = (path: string) => {
     return location === path;
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -18,20 +22,22 @@ const Sidebar = () => {
         <h3 className="text-sm uppercase tracking-wider text-gray-300 font-medium mb-2">Magic Tools</h3>
         <ul>
           <li>
-            <Link href="/logic-framework">
-              <a className={`sidebar-tool ${isActive("/logic-framework") ? "active" : ""}`}>
-                <span className="mr-2">•</span>
-                <span>Logic Framework Generator</span>
-              </a>
-            </Link>
+            <div 
+              className={`sidebar-tool ${isActive("/logic-framework") ? "active" : ""} cursor-pointer`}
+              onClick={() => handleNavigation("/logic-framework")}
+            >
+              <span className="mr-2">•</span>
+              <span>Logic Framework Generator</span>
+            </div>
           </li>
           <li>
-            <Link href="/swot-analysis">
-              <a className={`sidebar-tool ${isActive("/swot-analysis") ? "active" : ""}`}>
-                <span className="mr-2">•</span>
-                <span>SWOT Analysis</span>
-              </a>
-            </Link>
+            <div
+              className={`sidebar-tool ${isActive("/swot-analysis") ? "active" : ""} cursor-pointer`}
+              onClick={() => handleNavigation("/swot-analysis")}
+            >
+              <span className="mr-2">•</span>
+              <span>SWOT Analysis</span>
+            </div>
           </li>
         </ul>
       </div>

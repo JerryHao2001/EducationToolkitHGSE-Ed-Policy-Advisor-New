@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { generateLogicFramework, generateSwotAnalysis } from "./openai";
 import { logicFrameworkSchema, swotAnalysisSchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
+import { ZodError } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes for the educational tools
@@ -15,8 +16,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const generatedHtml = await generateLogicFramework(validData);
       
       res.json({ html: generatedHtml });
-    } catch (error) {
-      if (error.name === "ZodError") {
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
         const validationError = fromZodError(error);
         res.status(400).json({ message: validationError.message });
       } else {
@@ -33,8 +34,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const generatedHtml = await generateSwotAnalysis(validData);
       
       res.json({ html: generatedHtml });
-    } catch (error) {
-      if (error.name === "ZodError") {
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
         const validationError = fromZodError(error);
         res.status(400).json({ message: validationError.message });
       } else {

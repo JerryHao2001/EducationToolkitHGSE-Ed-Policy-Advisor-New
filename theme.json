@@ -1,14 +1,14 @@
 {
   "variant": "professional",
-  "primary": "hsl(345, 70%, 36%)",
+  "primary": "hsl(0, 100%, 21%)",
   "appearance": "light",
   "radius": 0.5,
-  "sidebar-background": "hsl(345, 70%, 36%)",
+  "sidebar-background": "hsl(0, 100%, 21%)",
   "sidebar-foreground": "hsl(0, 0%, 100%)",
-  "sidebar-primary": "hsl(345, 70%, 36%)",
+  "sidebar-primary": "hsl(0, 100%, 21%)",
   "sidebar-primary-foreground": "hsl(0, 0%, 100%)",
-  "sidebar-accent": "hsl(355, 40%, 85%)",
+  "sidebar-accent": "hsl(0, 70%, 85%)",
   "sidebar-accent-foreground": "hsl(0, 0%, 100%)",
-  "sidebar-border": "hsl(345, 70%, 30%)",
-  "sidebar-ring": "hsl(345, 70%, 30%)"
+  "sidebar-border": "hsl(0, 100%, 15%)",
+  "sidebar-ring": "hsl(0, 100%, 15%)"
 }

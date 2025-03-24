@@ -7,52 +7,111 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "sk-dummy-key-
 export async function generateLogicFramework(data: LogicFrameworkData): Promise<string> {
   try {
     const prompt = `
-      Please create a detailed Logic Framework for an educational program or initiative using the information provided below. 
-      Format your response as HTML that can be directly displayed in a web application.
-      Use semantic HTML tags and appropriate formatting.
-      
-      Organization: ${data.organization}
-      Contact Person: ${data.contact}
-      Email: ${data.email}
-      
-      Problem: ${data.problem}
-      Goal: ${data.goal}
-      Target Group: ${data.targetGroup}
-      
-      Key Actions:
-      1. ${data.action1}
-      2. ${data.action2}
-      3. ${data.action3}
-      
-      Success Indicators: ${data.successIndicators}
-      Challenges/Risks: ${data.challenges || "None specified"}
-      
-      Include these sections in your response:
-      1. Header with the organization name
-      2. Problem Statement
-      3. Goal
-      4. Target Audience
-      5. Inputs (resources needed)
-      6. Activities (based on the key actions)
-      7. Outputs (direct products)
-      8. Outcomes (short-term, medium-term, long-term)
-      9. Success Indicators
-      10. Potential Challenges
+      Using the following information, create a Logic Framework in a structured JSON format with rows: IMPACT, OBJECTIVES, RESULTS, ACTIVITIES 
+      and columns: DESCRIPTION, INDICATORS, SOURCES, PRESUMPTIONS.
 
-      Format the HTML to be visually appealing with appropriate sections, headings, and lists.
+      Problem: ${data.problem}
+
+      Goal: ${data.goal}
+
+      Target Group: ${data.targetGroup}
+
+      Key Actions:
+        - Action 1: ${data.action1}
+        - Action 2: ${data.action2}
+        - Action 3: ${data.action3}
+
+      Success Indicators: ${data.successIndicators}
+
+      Challenges/Risks: ${data.challenges || "None specified"}
+
+      Return only valid JSON with the following structure:
+      {
+        "IMPACT": {"DESCRIPTION": "...", "INDICATORS": "...", "SOURCES": "...", "PRESUMPTIONS": "..." },
+        "OBJECTIVES": {"DESCRIPTION": "...", "INDICATORS": "...", "SOURCES": "...", "PRESUMPTIONS": "..." },
+        "RESULTS": {"DESCRIPTION": "...", "INDICATORS": "...", "SOURCES": "...", "PRESUMPTIONS": "..." },
+        "ACTIVITIES": {"DESCRIPTION": "...", "INDICATORS": "...", "SOURCES": "...", "PRESUMPTIONS": "..." }
+      }
     `;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
       max_tokens: 2000,
     });
 
-    return response.choices[0].message.content || 
-      "<p>Sorry, we could not generate a logic framework at this time. Please try again later.</p>";
+    const jsonData = JSON.parse(response.choices[0].message.content || "{}");
+    
+    // Convert the JSON data to an HTML table
+    const tableHtml = `
+      <div class="logic-framework-container">
+        <h2 class="text-2xl font-bold mb-6 text-center">${data.organization} Logic Framework</h2>
+        <p class="mb-4"><strong>Contact:</strong> ${data.contact} (${data.email})</p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full border-collapse border border-gray-300">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="border border-gray-300 p-3 text-left">Framework Level</th>
+                <th class="border border-gray-300 p-3 text-left">Description</th>
+                <th class="border border-gray-300 p-3 text-left">Indicators</th>
+                <th class="border border-gray-300 p-3 text-left">Sources</th>
+                <th class="border border-gray-300 p-3 text-left">Presumptions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-blue-50">
+                <td class="border border-gray-300 p-3 font-medium">IMPACT</td>
+                <td class="border border-gray-300 p-3">${jsonData.IMPACT.DESCRIPTION}</td>
+                <td class="border border-gray-300 p-3">${jsonData.IMPACT.INDICATORS}</td>
+                <td class="border border-gray-300 p-3">${jsonData.IMPACT.SOURCES}</td>
+                <td class="border border-gray-300 p-3">${jsonData.IMPACT.PRESUMPTIONS}</td>
+              </tr>
+              <tr class="bg-green-50">
+                <td class="border border-gray-300 p-3 font-medium">OBJECTIVES</td>
+                <td class="border border-gray-300 p-3">${jsonData.OBJECTIVES.DESCRIPTION}</td>
+                <td class="border border-gray-300 p-3">${jsonData.OBJECTIVES.INDICATORS}</td>
+                <td class="border border-gray-300 p-3">${jsonData.OBJECTIVES.SOURCES}</td>
+                <td class="border border-gray-300 p-3">${jsonData.OBJECTIVES.PRESUMPTIONS}</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-300 p-3 font-medium">RESULTS</td>
+                <td class="border border-gray-300 p-3">${jsonData.RESULTS.DESCRIPTION}</td>
+                <td class="border border-gray-300 p-3">${jsonData.RESULTS.INDICATORS}</td>
+                <td class="border border-gray-300 p-3">${jsonData.RESULTS.SOURCES}</td>
+                <td class="border border-gray-300 p-3">${jsonData.RESULTS.PRESUMPTIONS}</td>
+              </tr>
+              <tr class="bg-gray-50">
+                <td class="border border-gray-300 p-3 font-medium">ACTIVITIES</td>
+                <td class="border border-gray-300 p-3">${jsonData.ACTIVITIES.DESCRIPTION}</td>
+                <td class="border border-gray-300 p-3">${jsonData.ACTIVITIES.INDICATORS}</td>
+                <td class="border border-gray-300 p-3">${jsonData.ACTIVITIES.SOURCES}</td>
+                <td class="border border-gray-300 p-3">${jsonData.ACTIVITIES.PRESUMPTIONS}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-6">
+          <h3 class="font-semibold mb-2">Problem Statement:</h3>
+          <p class="mb-4">${data.problem}</p>
+          
+          <h3 class="font-semibold mb-2">Target Group:</h3>
+          <p class="mb-4">${data.targetGroup}</p>
+          
+          <h3 class="font-semibold mb-2">Key Challenges:</h3>
+          <p>${data.challenges || "None specified"}</p>
+        </div>
+      </div>
+    `;
+
+    return tableHtml;
   } catch (error) {
     console.error("Error calling OpenAI API:", error);
-    throw new Error("Failed to generate Logic Framework");
+    return `<p class="text-red-500">Error: Unable to generate the Logic Framework. Please try again later.</p>
+            <details class="text-sm text-gray-600 mt-2">
+              <summary>Technical Details</summary>
+              <p>${error instanceof Error ? error.message : String(error)}</p>
+            </details>`;
   }
 }
 
