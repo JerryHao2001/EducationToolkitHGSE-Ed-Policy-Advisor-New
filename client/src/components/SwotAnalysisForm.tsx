@@ -163,7 +163,8 @@ const SwotAnalysisForm = ({ onSubmit, isSubmitting }: SwotAnalysisFormProps) => 
         <div className="mt-6 flex justify-end">
           <Button 
             type="submit" 
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white"
+            style={{ backgroundColor: "#A51C30" }}
+            className="px-4 py-2 text-white hover:bg-opacity-90"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Generating..." : "Generate SWOT Analysis"}

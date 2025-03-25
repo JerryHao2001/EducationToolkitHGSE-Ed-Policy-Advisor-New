@@ -11,8 +11,14 @@ const Sidebar = () => {
     navigate(path);
   };
 
+  // Harvard Crimson Red color
+  const harvardCrimson = "#A51C30";
+
   return (
-    <aside className="w-64 bg-sidebar text-sidebar-foreground flex flex-col h-full shrink-0">
+    <aside 
+      className="w-64 bg-sidebar text-sidebar-foreground flex flex-col h-full shrink-0"
+      style={{ backgroundColor: harvardCrimson }}
+    >
       <div className="p-6">
         <h1 className="text-xl font-semibold mb-1">HGSE Ed</h1>
         <h2 className="text-lg">Policy Advisor</h2>

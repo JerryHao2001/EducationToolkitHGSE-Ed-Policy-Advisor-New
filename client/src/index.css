@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --harvard-crimson: #A51C30;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -30,4 +34,26 @@
            hover:shadow-lg transition-all duration-200 cursor-pointer
            hover:translate-y-[-2px];
   }
+}
+
+/* Force Harvard Crimson for sidebar */
+aside.bg-sidebar {
+  background-color: var(--harvard-crimson) !important;
+}
+
+/* Main button color */
+.bg-blue-500, .bg-blue-600 {
+  background-color: var(--harvard-crimson) !important;
+}
+
+.hover\:bg-blue-600:hover {
+  background-color: #8a1726 !important;
+}
+
+.text-blue-500, .text-blue-700 {
+  color: var(--harvard-crimson) !important;
+}
+
+.hover\:text-blue-700:hover {
+  color: #8a1726 !important;
 }
