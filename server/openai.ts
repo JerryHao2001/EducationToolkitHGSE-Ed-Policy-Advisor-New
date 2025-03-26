@@ -2,9 +2,13 @@ import OpenAI from "openai";
 import { LogicFrameworkData, SwotAnalysisData } from "@shared/schema";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "sk-dummy-key-for-development" });
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || "sk-dummy-key-for-development",
+});
 
-export async function generateLogicFramework(data: LogicFrameworkData): Promise<string> {
+export async function generateLogicFramework(
+  data: LogicFrameworkData,
+): Promise<string> {
   try {
     const prompt = `
       Using the following information, create a Logic Framework in a structured JSON format with rows: IMPACT, OBJECTIVES, RESULTS, ACTIVITIES 
@@ -35,14 +39,14 @@ export async function generateLogicFramework(data: LogicFrameworkData): Promise<
     `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" },
       max_tokens: 2000,
     });
 
     const jsonData = JSON.parse(response.choices[0].message.content || "{}");
-    
+
     // Convert the JSON data to an HTML table
     const tableHtml = `
       <div class="logic-framework-container">
@@ -115,7 +119,9 @@ export async function generateLogicFramework(data: LogicFrameworkData): Promise<
   }
 }
 
-export async function generateSwotAnalysis(data: SwotAnalysisData): Promise<string> {
+export async function generateSwotAnalysis(
+  data: SwotAnalysisData,
+): Promise<string> {
   try {
     const prompt = `
       Please create a detailed SWOT Analysis for an educational program or initiative using the information provided below.
@@ -149,13 +155,15 @@ export async function generateSwotAnalysis(data: SwotAnalysisData): Promise<stri
     `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 2000,
     });
 
-    return response.choices[0].message.content || 
-      "<p>Sorry, we could not generate a SWOT analysis at this time. Please try again later.</p>";
+    return (
+      response.choices[0].message.content ||
+      "<p>Sorry, we could not generate a SWOT analysis at this time. Please try again later.</p>"
+    );
   } catch (error) {
     console.error("Error calling OpenAI API:", error);
     throw new Error("Failed to generate SWOT Analysis");
