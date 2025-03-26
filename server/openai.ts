@@ -125,7 +125,7 @@ export async function generateSwotAnalysis(
   try {
     const prompt = `
       Please create a detailed SWOT Analysis for an educational program or initiative using the information provided below.
-      Format your response as HTML that can be directly displayed in a web application.
+      Format your response as HTML that can be directly displayed in a web application. Do not include any additional text or block headers."
       Use semantic HTML tags and appropriate formatting.
       
       Project Name: ${data.projectName}
@@ -155,15 +155,15 @@ export async function generateSwotAnalysis(
     `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 2000,
     });
 
-    return (
+    const html =
       response.choices[0].message.content ||
-      "<p>Sorry, we could not generate a SWOT analysis at this time. Please try again later.</p>"
-    );
+      "<p>Sorry, we could not generate a SWOT analysis at this time. Please try again later.</p>";
+    return html.slice(8, html.length - 4);
   } catch (error) {
     console.error("Error calling OpenAI API:", error);
     throw new Error("Failed to generate SWOT Analysis");
