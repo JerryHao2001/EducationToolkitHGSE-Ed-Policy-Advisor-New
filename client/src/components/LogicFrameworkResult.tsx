@@ -1,16 +1,26 @@
+
 import { Button } from "@/components/ui/button";
 import { LogicFrameworkResponse } from "@/lib/types";
 import { Download } from "lucide-react";
+import html2canvas from 'html2canvas';
+import { useRef } from 'react';
 
 interface LogicFrameworkResultProps {
-  data: LogicFrameworkResponse | null;
+  data: LogicFrameworkResponse | undefined;
   isLoading: boolean;
 }
 
 const LogicFrameworkResult = ({ data, isLoading }: LogicFrameworkResultProps) => {
-  const handleDownload = () => {
-    // In a real application, this would download the framework
-    alert("This would download the framework as a PDF or Word document in a production environment.");
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = async () => {
+    if (!contentRef.current) return;
+    
+    const canvas = await html2canvas(contentRef.current);
+    const link = document.createElement('a');
+    link.download = 'logic-framework.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
   };
 
   return (
@@ -28,7 +38,7 @@ const LogicFrameworkResult = ({ data, isLoading }: LogicFrameworkResultProps) =>
           </div>
         </div>
       ) : data ? (
-        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: data.html }}></div>
+        <div ref={contentRef} className="prose max-w-none" dangerouslySetInnerHTML={{ __html: data.html }}></div>
       ) : (
         <div className="text-center py-8">
           <p className="text-gray-500">No framework data available.</p>
