@@ -160,10 +160,11 @@ export async function generateSwotAnalysis(
       max_tokens: 2000,
     });
 
-    return (
-      response.choices[0].message.content ||
-      "<p>Sorry, we could not generate a SWOT analysis at this time. Please try again later.</p>"
-    );
+    const content = response.choices[0].message.content || "";
+    // Remove markdown code block markers if present
+    const cleanContent = content.replace(/```html\n?|\n?```/g, "");
+
+    return cleanContent || "<p>Sorry, we could not generate a SWOT analysis at this time. Please try again later.</p>";
   } catch (error) {
     console.error("Error calling OpenAI API:", error);
     throw new Error("Failed to generate SWOT Analysis");
