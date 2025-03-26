@@ -51,7 +51,7 @@ const Sidebar = () => {
       </div>
 
       <div className="mt-auto p-4 text-sm text-gray-300">
-        <p>© 2023 Harvard Graduate School of Education</p>
+        <p>© 2025 Harvard Graduate School of Education</p>
       </div>
     </aside>
   );

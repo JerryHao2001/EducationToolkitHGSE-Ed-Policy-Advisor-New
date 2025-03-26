@@ -152,6 +152,7 @@ export async function generateSwotAnalysis(
       - Weaknesses: Red
       - Opportunities: Green
       - Threats: Yellow/Orange
+      Arrange the sections in a 2x2 grid.
     `;
 
     const response = await openai.chat.completions.create({
